@@ -1,0 +1,39 @@
+.app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.card {
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    var(--color-surface),
+    var(--color-bg-2)
+  );
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(var(--space-5), 4vw, var(--space-8));
+  /* Stable height across screens avoids jarring reflow between transitions. */
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+}
+
+.screen {
+  width: 100%;
+}
+
+.footer {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}

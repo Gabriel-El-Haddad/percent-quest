@@ -1,0 +1,95 @@
+.wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.field {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) 2.2rem var(--space-3) var(--space-4);
+}
+
+.number:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.3);
+}
+
+/* Hide native number spinners for a cleaner look. */
+.number::-webkit-outer-spin-button,
+.number::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+.number {
+  -moz-appearance: textfield;
+}
+
+.percent {
+  position: absolute;
+  right: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.submit {
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-5);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-on-primary);
+  background: linear-gradient(
+    180deg,
+    var(--color-primary),
+    var(--color-primary-strong)
+  );
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}

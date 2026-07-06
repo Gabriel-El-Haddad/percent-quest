@@ -1,0 +1,47 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-4);
+  border-radius: 999px;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(180deg, var(--color-text), var(--color-primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  max-width: 46ch;
+  line-height: 1.55;
+}
+
+.steps {
+  text-align: left;
+  color: var(--color-text);
+  line-height: 1.9;
+  padding-left: 1.2em;
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.last {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
