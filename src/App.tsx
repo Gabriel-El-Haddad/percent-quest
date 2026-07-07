@@ -50,10 +50,6 @@ function App() {
           </motion.div>
         </AnimatePresence>
       </section>
-
-      <footer className={styles.footer}>
-        Percent Quest · estimate the shaded area
-      </footer>
     </main>
   )
 }

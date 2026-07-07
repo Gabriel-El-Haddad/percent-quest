@@ -7,6 +7,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  /* Grid items default to min-width:auto, which lets long mono values push the
+     grid wider than the card and break the layout. Clamp them to the column. */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .label {
@@ -21,11 +25,15 @@
   font-weight: 700;
   font-family: var(--font-mono);
   line-height: 1.1;
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 .hint {
   font-size: 0.8rem;
   color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 .success .value {

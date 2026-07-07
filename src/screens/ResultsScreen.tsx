@@ -1,5 +1,6 @@
 import { Button } from '../components/Button'
 import { StatTile } from '../components/StatTile'
+import { KnightStage } from '../components/KnightStage'
 import { summaryMessage } from '../game/messages'
 import { useCountUp } from '../hooks/useCountUp'
 import type { SessionSummary } from '../game/types'
@@ -20,7 +21,10 @@ export function ResultsScreen({ summary, onPlayAgain }: ResultsScreenProps) {
           <span className={styles.scoreValue}>{Math.round(animatedAccuracy)}%</span>
           <span className={styles.scoreLabel}>accuracy</span>
         </div>
-        <p className={styles.message}>{summaryMessage(summary)}</p>
+        <KnightStage
+          line={summaryMessage(summary)}
+          mood={accuracy >= 50 ? 'happy' : 'encouraging'}
+        />
       </div>
 
       <div className={styles.grid}>
@@ -34,13 +38,13 @@ export function ResultsScreen({ summary, onPlayAgain }: ResultsScreenProps) {
         <StatTile
           label="Best guess"
           value={best ? `${best.error}%` : '—'}
-          hint={best ? `off on ${best.correctPct}% image` : undefined}
+          hint={best ? `off on the ${best.correctPct}% image` : undefined}
           tone="success"
         />
         <StatTile
           label="Worst guess"
           value={worst ? `${worst.error}%` : '—'}
-          hint={worst ? `off on ${worst.correctPct}% image` : undefined}
+          hint={worst ? `off on the ${worst.correctPct}% image` : undefined}
           tone="danger"
         />
         <StatTile

@@ -1,18 +1,24 @@
 .app {
-  flex: 1;
+  /* Exactly one viewport tall; the whole game fits inside without scrolling.
+     dvh tracks mobile browser chrome (address bar) so nothing is cut off. */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-5);
-  padding: var(--space-5);
+  padding: clamp(var(--space-3), 2.5vh, var(--space-5));
   width: 100%;
   max-width: var(--content-max);
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .card {
   width: 100%;
+  /* Fill the available height and lay children out top-to-bottom so the image
+     can flex to absorb leftover space (see GameScreen). */
+  height: 100%;
+  min-height: 0;
   background: linear-gradient(
     180deg,
     var(--color-surface),
@@ -21,19 +27,21 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: clamp(var(--space-5), 4vw, var(--space-8));
-  /* Stable height across screens avoids jarring reflow between transitions. */
-  min-height: 520px;
+  padding: clamp(var(--space-4), 3vh, var(--space-6));
   display: flex;
-  align-items: center;
+  flex-direction: column;
+}
+
+@media (max-width: 480px) {
+  .card {
+    border-radius: var(--radius-md);
+  }
 }
 
 .screen {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-}
-
-.footer {
-  color: var(--color-text-muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
+  display: flex;
+  flex-direction: column;
 }

@@ -19,6 +19,20 @@
   color: var(--color-text);
 }
 
+/* The trail lays the path (track + moving marker) beside the castle goalpost. */
+.trail {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Positioning context for the marker so its 0–100% maps to the track width. */
+.path {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
 .track {
   height: 8px;
   border-radius: 999px;
@@ -31,4 +45,28 @@
   border-radius: 999px;
   background: linear-gradient(90deg, var(--color-primary), var(--color-success));
   transition: width var(--dur-med) var(--ease-out);
+}
+
+.marker {
+  position: absolute;
+  top: 50%;
+  /* left is set inline (0–100%); shift so the flagpole sits over the fill edge. */
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 22px;
+  transition: left var(--dur-med) var(--ease-out);
+  pointer-events: none;
+}
+
+.pennant {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.castle {
+  flex: 0 0 auto;
+  font-size: 1.1rem;
+  line-height: 1;
 }

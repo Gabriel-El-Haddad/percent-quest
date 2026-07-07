@@ -1,9 +1,12 @@
 .wrap {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  gap: var(--space-4);
+  gap: clamp(var(--space-3), 2.5vh, var(--space-5));
 }
 
 .badge {
@@ -18,27 +21,13 @@
 }
 
 .title {
-  font-size: 3rem;
+  font-size: clamp(2.2rem, 9vw, 3rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   background: linear-gradient(180deg, var(--color-text), var(--color-primary));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.subtitle {
-  color: var(--color-text-muted);
-  max-width: 46ch;
-  line-height: 1.55;
-}
-
-.steps {
-  text-align: left;
-  color: var(--color-text);
-  line-height: 1.9;
-  padding-left: 1.2em;
-  margin: var(--space-2) 0 var(--space-4);
 }
 
 .last {

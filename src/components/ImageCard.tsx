@@ -16,14 +16,16 @@ interface ImageCardProps {
 export function ImageCard({ src, rotation, alt = 'Estimate the shaded area' }: ImageCardProps) {
   const url = import.meta.env.BASE_URL + src
   return (
-    <div className={styles.frame}>
-      <img
-        className={styles.image}
-        src={url}
-        alt={alt}
-        draggable={false}
-        style={{ transform: `rotate(${rotation}deg)` }}
-      />
+    <div className={styles.area}>
+      <div className={styles.frame}>
+        <img
+          className={styles.image}
+          src={url}
+          alt={alt}
+          draggable={false}
+          style={{ transform: `rotate(${rotation}deg)` }}
+        />
+      </div>
     </div>
   )
 }

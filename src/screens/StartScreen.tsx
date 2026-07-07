@@ -1,5 +1,6 @@
 import { Button } from '../components/Button'
-import { gameConfig } from '../config/gameConfig'
+import { KnightStage } from '../components/KnightStage'
+import { introMessage } from '../game/messages'
 import type { StoredSession } from '../storage/sessionStore'
 import styles from './StartScreen.module.css'
 
@@ -12,29 +13,19 @@ export function StartScreen({ onStart, history }: StartScreenProps) {
   const last = history[0]
   return (
     <div className={styles.wrap}>
-      <div className={styles.badge}>🎯 Estimation Practice</div>
+      <div className={styles.badge}>🛡️ Estimation Quest</div>
       <h1 className={styles.title}>Percent Quest</h1>
-      <p className={styles.subtitle}>
-        How much of each image is shaded? Train your eye by estimating the
-        percentage — images are shuffled and randomly rotated every game.
-      </p>
 
-      <ol className={styles.steps}>
-        <li>Study the shaded image.</li>
-        <li>Type your best percentage guess.</li>
-        <li>
-          Land within <strong>±{gameConfig.tolerance}%</strong> to nail it.
-        </li>
-      </ol>
+      <KnightStage line={introMessage()} mood="happy" />
 
       <Button onClick={onStart} full>
-        Start Game
+        Begin the Quest
       </Button>
 
       {last && (
         <p className={styles.last}>
-          Last session: <strong>{last.accuracy}%</strong> accuracy over{' '}
-          {last.total} images.
+          Last quest: <strong>{last.accuracy}%</strong> accuracy over {last.total}{' '}
+          sigils.
         </p>
       )}
     </div>

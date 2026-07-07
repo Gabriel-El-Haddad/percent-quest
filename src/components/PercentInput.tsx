@@ -1,71 +1,47 @@
-import { useId } from 'react'
 import { gameConfig } from '../config/gameConfig'
 import styles from './PercentInput.module.css'
 
 interface PercentInputProps {
-  value: string
-  onChange: (value: string) => void
+  value: number
+  onChange: (value: number) => void
   onSubmit: () => void
   disabled?: boolean
 }
 
 /**
- * Percentage entry: a synced number field + range slider. Keeps the raw string
- * value (so the field can be empty) — parsing/clamping happens at scoring time.
+ * Slider-only percentage entry. Deliberately has no text field: on mobile a
+ * numeric keyboard shifts the page, so the range slider is the sole control and
+ * the chosen value is shown as a large read-only number.
  */
 export function PercentInput({ value, onChange, onSubmit, disabled }: PercentInputProps) {
-  const id = useId()
   const { minGuess, maxGuess } = gameConfig
-  const sliderValue = value === '' ? minGuess : Number(value)
-
   return (
     <div className={styles.wrap}>
-      <label className={styles.label} htmlFor={id}>
-        Your estimate
-      </label>
-      <form
-        className={styles.row}
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (!disabled && value !== '') onSubmit()
-        }}
-      >
-        <div className={styles.field}>
-          <input
-            id={id}
-            className={styles.number}
-            type="number"
-            inputMode="numeric"
-            min={minGuess}
-            max={maxGuess}
-            step={1}
-            placeholder="0"
-            value={value}
-            disabled={disabled}
-            onChange={(e) => onChange(e.target.value)}
-            autoFocus
-          />
-          <span className={styles.percent}>%</span>
-        </div>
-        <button
-          type="submit"
-          className={styles.submit}
-          disabled={disabled || value === ''}
-        >
-          Submit
-        </button>
-      </form>
+      <div className={styles.readout} aria-live="polite">
+        <span className={styles.number}>{value}</span>
+        <span className={styles.percent}>%</span>
+      </div>
+
       <input
         className={styles.slider}
         type="range"
         min={minGuess}
         max={maxGuess}
         step={1}
-        value={sliderValue}
+        value={value}
         disabled={disabled}
-        aria-label="Estimate slider"
-        onChange={(e) => onChange(e.target.value)}
+        aria-label="Your percentage estimate"
+        onChange={(e) => onChange(Number(e.target.value))}
       />
+
+      <button
+        type="button"
+        className={styles.submit}
+        onClick={onSubmit}
+        disabled={disabled}
+      >
+        Lock it in
+      </button>
     </div>
   )
 }

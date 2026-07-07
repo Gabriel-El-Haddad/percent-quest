@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Button } from '../components/Button'
+import { KnightStage } from '../components/KnightStage'
 import { feedbackMessage } from '../game/messages'
 import type { RoundResult } from '../game/types'
 import styles from './FeedbackScreen.module.css'
@@ -26,6 +27,11 @@ export function FeedbackScreen({ result, isLast, onNext }: FeedbackScreenProps) 
         </span>
       </motion.div>
 
+      <KnightStage
+        line={feedbackMessage(result)}
+        mood={within ? 'happy' : 'encouraging'}
+      />
+
       <div className={styles.numbers}>
         <div className={styles.stat}>
           <span className={styles.statLabel}>Your guess</span>
@@ -42,8 +48,6 @@ export function FeedbackScreen({ result, isLast, onNext }: FeedbackScreenProps) 
           </span>
         </div>
       </div>
-
-      <p className={styles.message}>{feedbackMessage(result)}</p>
 
       <Button onClick={onNext} full>
         {isLast ? 'See Results' : 'Next Image'}

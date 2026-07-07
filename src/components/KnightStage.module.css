@@ -1,0 +1,21 @@
+.stage {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.knight {
+  flex: 0 0 auto;
+  width: clamp(64px, 18vw, 92px);
+}
+
+@media (max-width: 560px) {
+  .stage {
+    gap: var(--space-3);
+  }
+
+  .knight {
+    width: clamp(52px, 16vw, 72px);
+  }
+}

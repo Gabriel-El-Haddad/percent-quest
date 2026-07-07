@@ -1,0 +1,52 @@
+.bubble {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  /* Top-align so a line wrapping 1->2 lines grows downward instead of nudging
+     the first line up (which reads as a vertical jump while typing). */
+  align-items: flex-start;
+}
+
+/* Tail pointing toward the knight (left on wide layouts, down on stacked). */
+.bubble::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 8px 9px 8px 0;
+  border-style: solid;
+  border-color: transparent var(--color-border) transparent transparent;
+}
+
+.line {
+  color: var(--color-text);
+  font-size: 1.02rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  /* Reserve two lines' height up front so the bubble (and the page) hold a
+     stable size while the typewriter fills it in. Copy is kept to <=2 lines. */
+  min-height: 2.9em;
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-primary);
+  animation: blink 0.9s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
