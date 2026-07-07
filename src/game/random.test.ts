@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { shuffle, pickRotation, buildDeck, type RNG } from './random'
-import type { ImageItem } from './types'
+import { shuffle, pickRotation, buildGeneratedDeck, type RNG } from './random'
+import { generateImage } from './generateImage'
 
 /** Deterministic RNG that cycles through preset values. */
 function seq(values: number[]): RNG {
@@ -8,11 +8,17 @@ function seq(values: number[]): RNG {
   return () => values[i++ % values.length]
 }
 
-const images: ImageItem[] = [
-  { id: 'a', src: 'images/a.svg', correctPct: 10 },
-  { id: 'b', src: 'images/b.svg', correctPct: 20 },
-  { id: 'c', src: 'images/c.svg', correctPct: 30 },
-]
+/** Small seeded PRNG for realistic, varied floats in [0, 1). */
+function mulberry32(seed: number): RNG {
+  let a = seed >>> 0
+  return () => {
+    a |= 0
+    a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
 
 describe('shuffle', () => {
   it('does not mutate the input and preserves all elements', () => {
@@ -38,22 +44,51 @@ describe('pickRotation', () => {
   })
 })
 
-describe('buildDeck', () => {
-  it('creates one round per image with a rotation each', () => {
-    const deck = buildDeck(images, seq([0, 0, 0, 0, 0, 0]), null)
+describe('buildGeneratedDeck', () => {
+  it('creates `count` rounds, each a generated image with a rotation', () => {
+    const deck = buildGeneratedDeck(mulberry32(1), 3)
     expect(deck).toHaveLength(3)
-    for (const round of deck) {
+    deck.forEach((round, i) => {
       expect([0, 90, 180, 270]).toContain(round.rotation)
-      expect(images.map((i) => i.id)).toContain(round.image.id)
+      expect(round.image.id).toBe(`gen-${i + 1}`)
+      expect(round.image.src.startsWith('data:image/svg+xml,')).toBe(true)
+      // Coverage stays inside the configured 5–100 range (allow rounding slack).
+      expect(round.image.correctPct).toBeGreaterThanOrEqual(4)
+      expect(round.image.correctPct).toBeLessThanOrEqual(100)
+    })
+  })
+
+  it('is deterministic for a fixed RNG seed', () => {
+    const a = buildGeneratedDeck(mulberry32(7), 3)
+    const b = buildGeneratedDeck(mulberry32(7), 3)
+    expect(a.map((r) => r.image.src)).toEqual(b.map((r) => r.image.src))
+    expect(a.map((r) => r.image.correctPct)).toEqual(
+      b.map((r) => r.image.correctPct),
+    )
+  })
+
+  it('produces distinct images across rounds', () => {
+    const deck = buildGeneratedDeck(mulberry32(3), 5)
+    const uniqueSrcs = new Set(deck.map((r) => r.image.src))
+    expect(uniqueSrcs.size).toBe(deck.length)
+  })
+})
+
+describe('generateImage', () => {
+  it('produces coverage close to the requested target', () => {
+    for (const target of [8, 25, 50, 74, 96]) {
+      const { correctPct } = generateImage(target, mulberry32(target * 13 + 1))
+      // Solver drives measured coverage to the target within sampling precision.
+      expect(Math.abs(correctPct - target)).toBeLessThan(1)
     }
   })
 
-  it('respects sessionLength cap', () => {
-    const deck = buildDeck(images, seq([0.2, 0.4, 0.6, 0.8]), 2)
-    expect(deck).toHaveLength(2)
-  })
-
-  it('uses the full dataset when sessionLength is null', () => {
-    expect(buildDeck(images, seq([0.1, 0.2, 0.3]), null)).toHaveLength(3)
+  it('returns an inline SVG data URL', () => {
+    const { src } = generateImage(30, mulberry32(99))
+    expect(src.startsWith('data:image/svg+xml,')).toBe(true)
+    const svg = decodeURIComponent(src.slice('data:image/svg+xml,'.length))
+    expect(svg).toContain('<svg')
+    expect(svg).toContain('#84DB6D') // green fill
+    expect(svg).toContain('clip-path="url(#disk)"')
   })
 })

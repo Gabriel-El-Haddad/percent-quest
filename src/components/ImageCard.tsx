@@ -8,13 +8,14 @@ interface ImageCardProps {
 }
 
 /**
- * Displays a dataset image at a given rotation. Rotation is a pure CSS
- * transform applied at render time — the underlying image data is never
- * mutated. `src` is dataset-relative; we prefix the app base URL so it resolves
- * correctly under GitHub Pages' /<repo>/ path.
+ * Displays an image at a given rotation. Rotation is a pure CSS transform
+ * applied at render time — the underlying image data is never mutated.
+ * Procedurally-generated images arrive as inline `data:` URLs and are used as-is;
+ * a dataset-relative path is prefixed with the app base URL so it resolves under
+ * GitHub Pages' /<repo>/ path.
  */
 export function ImageCard({ src, rotation, alt = 'Estimate the shaded area' }: ImageCardProps) {
-  const url = import.meta.env.BASE_URL + src
+  const url = src.startsWith('data:') ? src : import.meta.env.BASE_URL + src
   return (
     <div className={styles.area}>
       <div className={styles.frame}>

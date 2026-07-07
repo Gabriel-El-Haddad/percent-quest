@@ -4,14 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "generate:images": "node scripts/generate-images.mjs",
-    "predev": "npm run generate:images",
     "dev": "vite",
-    "prebuild": "npm run generate:images",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "pretest": "npm run generate:images",
     "test": "vitest run",
     "test:watch": "vitest"
   },

@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import imagesData from '../data/images.json'
 import { gameReducer, initialState } from '../game/reducer'
-import { buildDeck, defaultRng, type RNG } from '../game/random'
+import { buildGeneratedDeck, defaultRng, type RNG } from '../game/random'
 import { summarize } from '../game/scoring'
-import type { ImageItem, RoundPlan } from '../game/types'
+import type { RoundPlan } from '../game/types'
 import {
   createLocalSessionStore,
   type SessionStore,
   type StoredSession,
 } from '../storage/sessionStore'
-
-const images = imagesData as ImageItem[]
 
 export interface UseGameOptions {
   /** Injectable for tests; defaults to Math.random. */
@@ -42,7 +39,7 @@ export function useGame(options: UseGameOptions = {}) {
 
   const start = useCallback(() => {
     savedForGame.current = false
-    dispatch({ type: 'START_GAME', deck: buildDeck(images, rng) })
+    dispatch({ type: 'START_GAME', deck: buildGeneratedDeck(rng) })
   }, [rng])
 
   const submit = useCallback((guess: number) => {

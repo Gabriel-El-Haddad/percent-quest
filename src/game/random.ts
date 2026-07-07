@@ -1,5 +1,6 @@
-import type { ImageItem, Rotation, RoundPlan } from './types'
+import type { Rotation, RoundPlan } from './types'
 import { gameConfig } from '../config/gameConfig'
+import { generateImage, pickTarget } from './generateImage'
 
 /** A random source returning a float in [0, 1). Injectable for deterministic tests. */
 export type RNG = () => number
@@ -26,16 +27,22 @@ export function pickRotation(
 }
 
 /**
- * Build the ordered rounds for one game: shuffle the dataset, optionally cap to
- * `sessionLength`, and assign each image a random rotation.
+ * Build the ordered rounds for one game: procedurally generate `count` unique
+ * images at random target percentages and assign each a random rotation. Every
+ * game produces a fresh set — nothing is stored or repeated.
  */
-export function buildDeck(
-  images: readonly ImageItem[],
+export function buildGeneratedDeck(
   rng: RNG = defaultRng,
-  sessionLength: number | null = gameConfig.sessionLength,
+  count: number = gameConfig.roundsPerGame,
 ): RoundPlan[] {
-  const shuffled = shuffle(images, rng)
-  const chosen =
-    sessionLength != null ? shuffled.slice(0, sessionLength) : shuffled
-  return chosen.map((image) => ({ image, rotation: pickRotation(rng) }))
+  const rounds: RoundPlan[] = []
+  for (let i = 0; i < count; i++) {
+    const target = pickTarget(rng)
+    const { src, correctPct } = generateImage(target, rng)
+    rounds.push({
+      image: { id: `gen-${i + 1}`, src, correctPct },
+      rotation: pickRotation(rng),
+    })
+  }
+  return rounds
 }

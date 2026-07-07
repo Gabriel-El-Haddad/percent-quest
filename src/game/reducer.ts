@@ -13,8 +13,8 @@ export const initialState: GameState = {
  * The game as a pure finite state machine:
  *   idle → (START_GAME) → playing ⇄ feedback → … → results → (RESET) → idle
  *
- * The deck is built with randomness OUTSIDE the reducer (see buildDeck) and
- * passed in via START_GAME, keeping this function pure and deterministic.
+ * The deck is built with randomness OUTSIDE the reducer (see buildGeneratedDeck)
+ * and passed in via START_GAME, keeping this function pure and deterministic.
  */
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {

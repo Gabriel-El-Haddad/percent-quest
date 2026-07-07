@@ -7,11 +7,10 @@ export interface GameConfig {
   tolerance: number
   /** Rotations an image may be displayed at (defeats memorization). */
   rotations: readonly Rotation[]
-  /**
-   * How many images per game. `null` = use the entire shuffled dataset (V1).
-   * Set a number once the dataset grows and you want shorter sessions.
-   */
-  sessionLength: number | null
+  /** How many procedurally-generated images to show per game. */
+  roundsPerGame: number
+  /** Inclusive range for the generated images' green coverage (percent). */
+  targetRange: { min: number; max: number }
   /** Allowed range for the percentage input. */
   minGuess: number
   maxGuess: number
@@ -20,7 +19,8 @@ export interface GameConfig {
 export const gameConfig: GameConfig = {
   tolerance: 5,
   rotations: [0, 90, 180, 270],
-  sessionLength: null,
+  roundsPerGame: 15,
+  targetRange: { min: 5, max: 100 },
   minGuess: 0,
   maxGuess: 100,
 }
