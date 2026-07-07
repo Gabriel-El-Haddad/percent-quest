@@ -1,4 +1,4 @@
-import type { Rotation, RoundPlan } from './types'
+import type { ImageItem, Rotation, RoundPlan } from './types'
 import { gameConfig } from '../config/gameConfig'
 import { generateImage, pickTarget } from './generateImage'
 
@@ -27,9 +27,23 @@ export function pickRotation(
 }
 
 /**
- * Build the ordered rounds for one game: procedurally generate `count` unique
- * images at random target percentages and assign each a random rotation. Every
- * game produces a fresh set — nothing is stored or repeated.
+ * Build the ordered rounds for one game from the committed dataset: shuffle the
+ * images, take up to `count` of them (the whole set when it is smaller), and give
+ * each a random rotation so repeats still look fresh.
+ */
+export function buildDeck(
+  images: readonly ImageItem[],
+  rng: RNG = defaultRng,
+  count: number = gameConfig.roundsPerGame,
+): RoundPlan[] {
+  const chosen = shuffle(images, rng).slice(0, count)
+  return chosen.map((image) => ({ image, rotation: pickRotation(rng) }))
+}
+
+/**
+ * Shelved runtime path: procedurally generate `count` unique images at random
+ * target percentages, each with a random rotation. Kept (and unit-tested) so the
+ * generator can be re-enabled later; not currently wired into the game.
  */
 export function buildGeneratedDeck(
   rng: RNG = defaultRng,

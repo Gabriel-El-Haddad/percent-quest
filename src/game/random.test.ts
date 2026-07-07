@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { shuffle, pickRotation, buildGeneratedDeck, type RNG } from './random'
+import { shuffle, pickRotation, buildDeck, buildGeneratedDeck, type RNG } from './random'
 import { generateImage } from './generateImage'
+import type { ImageItem } from './types'
 
 /** Deterministic RNG that cycles through preset values. */
 function seq(values: number[]): RNG {
@@ -41,6 +42,37 @@ describe('pickRotation', () => {
     expect(pickRotation(() => 0)).toBe(0)
     expect(pickRotation(() => 0.99, [0, 90, 180, 270])).toBe(270)
     expect(pickRotation(() => 0.5, [0, 90, 180, 270])).toBe(180)
+  })
+})
+
+describe('buildDeck', () => {
+  const images: ImageItem[] = [
+    { id: 'a', src: 'images/a.png', correctPct: 10 },
+    { id: 'b', src: 'images/b.png', correctPct: 20 },
+    { id: 'c', src: 'images/c.png', correctPct: 30 },
+  ]
+
+  it('creates one round per image with a rotation, drawing from the set', () => {
+    const deck = buildDeck(images, seq([0, 0, 0, 0, 0, 0]), 10)
+    expect(deck).toHaveLength(3)
+    for (const round of deck) {
+      expect([0, 90, 180, 270]).toContain(round.rotation)
+      expect(images.map((i) => i.id)).toContain(round.image.id)
+    }
+  })
+
+  it('caps the deck at `count` when the dataset is larger', () => {
+    expect(buildDeck(images, seq([0.2, 0.4, 0.6, 0.8]), 2)).toHaveLength(2)
+  })
+
+  it('uses the whole set when `count` exceeds its size', () => {
+    expect(buildDeck(images, seq([0.1, 0.2, 0.3]), 15)).toHaveLength(3)
+  })
+
+  it('is deterministic for a fixed RNG', () => {
+    const a = buildDeck(images, mulberry32(5), 3)
+    const b = buildDeck(images, mulberry32(5), 3)
+    expect(a).toEqual(b)
   })
 })
 

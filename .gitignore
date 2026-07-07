@@ -15,12 +15,6 @@ dist-ssr
 # Lockfile: CI uses `npm install`; keep the repo dependency-manager agnostic.
 package-lock.json
 
-# Generated placeholder dataset (rebuilt by `npm run generate:images`,
-# which runs automatically before dev/test/build). Replace the generator
-# with your own committed dataset to use real images.
-/public/images/
-/src/data/images.json
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
