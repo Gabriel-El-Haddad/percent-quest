@@ -2,9 +2,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// GitHub Pages project sites are served from /<repo>/, so the build must be
-// aware of that base path. Dev/preview default to '/'. Override via BASE_PATH.
-const base = process.env.BASE_PATH ?? '/percent-quest/'
+// Served from the root of the custom domain (lotus-corniculatus.ca), so the
+// base is '/'. Override via BASE_PATH if publishing under a subpath instead.
+const base = process.env.BASE_PATH ?? '/'
 
 // https://vite.dev/config/
 export default defineConfig({
