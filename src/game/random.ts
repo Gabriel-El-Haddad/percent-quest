@@ -17,13 +17,12 @@ export function shuffle<T>(items: readonly T[], rng: RNG = defaultRng): T[] {
   return out
 }
 
-/** Pick a rotation uniformly from the configured set. */
+/** Pick one of `steps` evenly-spaced angles uniformly. */
 export function pickRotation(
   rng: RNG = defaultRng,
-  rotations: readonly Rotation[] = gameConfig.rotations,
+  steps: number = gameConfig.rotationSteps,
 ): Rotation {
-  const i = Math.floor(rng() * rotations.length)
-  return rotations[i]
+  return Math.floor(rng() * steps) * (360 / steps)
 }
 
 /**

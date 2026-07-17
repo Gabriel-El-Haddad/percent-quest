@@ -38,10 +38,23 @@ describe('shuffle', () => {
 })
 
 describe('pickRotation', () => {
-  it('selects from the rotation set by index', () => {
+  it('maps the RNG across the full circle', () => {
     expect(pickRotation(() => 0)).toBe(0)
-    expect(pickRotation(() => 0.99, [0, 90, 180, 270])).toBe(270)
-    expect(pickRotation(() => 0.5, [0, 90, 180, 270])).toBe(180)
+    expect(pickRotation(() => 0.5)).toBe(180)
+    expect(pickRotation(() => 0.999)).toBe(359)
+  })
+
+  it('spaces angles evenly for a coarser step count', () => {
+    expect(pickRotation(() => 0.99, 4)).toBe(270)
+    expect(pickRotation(() => 0.5, 4)).toBe(180)
+  })
+
+  it('never reaches a full turn', () => {
+    for (const r of [0, 0.25, 0.5, 0.75, 0.999999]) {
+      const angle = pickRotation(() => r)
+      expect(angle).toBeGreaterThanOrEqual(0)
+      expect(angle).toBeLessThan(360)
+    }
   })
 })
 
@@ -52,11 +65,12 @@ describe('buildDeck', () => {
     { id: 'c', src: 'images/c.png', correctPct: 30 },
   ]
 
-  it('creates one round per image with a rotation, drawing from the set', () => {
+  it('creates one round per image with a rotation on the circle', () => {
     const deck = buildDeck(images, seq([0, 0, 0, 0, 0, 0]), 10)
     expect(deck).toHaveLength(3)
     for (const round of deck) {
-      expect([0, 90, 180, 270]).toContain(round.rotation)
+      expect(round.rotation).toBeGreaterThanOrEqual(0)
+      expect(round.rotation).toBeLessThan(360)
       expect(images.map((i) => i.id)).toContain(round.image.id)
     }
   })
@@ -81,7 +95,8 @@ describe('buildGeneratedDeck', () => {
     const deck = buildGeneratedDeck(mulberry32(1), 3)
     expect(deck).toHaveLength(3)
     deck.forEach((round, i) => {
-      expect([0, 90, 180, 270]).toContain(round.rotation)
+      expect(round.rotation).toBeGreaterThanOrEqual(0)
+      expect(round.rotation).toBeLessThan(360)
       expect(round.image.id).toBe(`gen-${i + 1}`)
       expect(round.image.src.startsWith('data:image/svg+xml,')).toBe(true)
       // Coverage stays inside the configured 5–100 range (allow rounding slack).

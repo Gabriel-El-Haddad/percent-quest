@@ -1,7 +1,10 @@
 // Core domain types. This module is pure data — no React, no DOM — so the game
 // logic can be unit-tested and reused (future modes, a server, etc.).
 
-export type Rotation = 0 | 90 | 180 | 270
+/** Degrees clockwise. Any angle is valid: the artwork's only opaque pixels are
+ * the circle itself, centred with a transparent margin, so an off-axis angle
+ * neither clips the circle nor reveals a corner. */
+export type Rotation = number
 
 /** A single item from the static dataset (src is relative to the app base). */
 export interface ImageItem {
