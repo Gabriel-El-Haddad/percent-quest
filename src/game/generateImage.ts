@@ -13,11 +13,11 @@ import { gameConfig } from '../config/gameConfig'
 import type { RNG } from './random'
 
 // Canvas + circle geometry, matched to the reference images (900×900, centered
-// disk of radius 300 with a ~4px black stroke).
+// disk of radius 380 with a ~4px black stroke).
 const SIZE = 900
 const CX = SIZE / 2
 const CY = SIZE / 2
-const R = 300
+const R = 380
 const STROKE = 4
 const GREEN = '#84DB6D'
 const WHITE = '#ffffff'
