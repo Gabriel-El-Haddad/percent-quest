@@ -22,7 +22,6 @@ export function GameScreen({ round, position, total, onSubmit }: GameScreenProps
 
   const handleSubmit = () => {
     onSubmit(value)
-    setValue(START_VALUE)
   }
 
   return (

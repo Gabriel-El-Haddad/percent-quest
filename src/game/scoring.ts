@@ -11,6 +11,11 @@ export function clampGuess(
   return Math.min(max, Math.max(min, guess))
 }
 
+/** Round to one decimal place for display-friendly aggregates. */
+function round1(n: number): number {
+  return Math.round(n * 10) / 10
+}
+
 /** Score a single guess against an image, producing a recorded result. */
 export function scoreRound(
   image: ImageItem,
@@ -19,21 +24,17 @@ export function scoreRound(
   tolerance: number = gameConfig.tolerance,
 ): RoundResult {
   const clamped = clampGuess(guess)
-  const error = Math.abs(clamped - image.correctPct)
+  const rawError = Math.abs(clamped - image.correctPct)
   return {
     imageId: image.id,
     src: image.src,
     rotation,
     correctPct: image.correctPct,
     guess: clamped,
-    error,
-    within: error <= tolerance,
+    // Rounded for display; guards against binary float artifacts (e.g. 60 - 72.4).
+    error: round1(rawError),
+    within: rawError <= tolerance,
   }
-}
-
-/** Round to one decimal place for display-friendly aggregates. */
-function round1(n: number): number {
-  return Math.round(n * 10) / 10
 }
 
 /** Aggregate a set of round results into session statistics. */

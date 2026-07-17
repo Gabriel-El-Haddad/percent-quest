@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { Rotation } from '../game/types'
 import styles from './ImageCard.module.css'
 
@@ -16,15 +17,21 @@ interface ImageCardProps {
  */
 export function ImageCard({ src, rotation, alt = 'Estimate the shaded area' }: ImageCardProps) {
   const url = src.startsWith('data:') ? src : import.meta.env.BASE_URL + src
+  const [loaded, setLoaded] = useState(false)
   return (
     <div className={styles.area}>
-      <div className={styles.frame}>
+      {/* pulse fills the gap while the image loads, instead of a blank frame */}
+      <div className={`${styles.frame} ${loaded ? '' : styles.loading}`}>
         <img
           className={styles.image}
           src={url}
           alt={alt}
           draggable={false}
-          style={{ transform: `rotate(${rotation}deg)` }}
+          onLoad={() => setLoaded(true)}
+          style={{
+            transform: `rotate(${rotation}deg)`,
+            opacity: loaded ? 1 : 0,
+          }}
         />
       </div>
     </div>
