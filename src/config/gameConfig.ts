@@ -15,6 +15,8 @@ export interface GameConfig {
   /** Allowed range for the percentage input. */
   minGuess: number
   maxGuess: number
+  /** Accuracy (percent) a finished game must reach to unlock the head narrator. */
+  headUnlockAccuracy: number
 }
 
 export const gameConfig: GameConfig = {
@@ -24,4 +26,5 @@ export const gameConfig: GameConfig = {
   targetRange: { min: 5, max: 100 },
   minGuess: 0,
   maxGuess: 100,
+  headUnlockAccuracy: 80,
 }

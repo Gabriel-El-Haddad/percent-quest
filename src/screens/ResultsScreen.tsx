@@ -8,10 +8,16 @@ import styles from './ResultsScreen.module.css'
 
 interface ResultsScreenProps {
   summary: SessionSummary
+  /** Shows the unlock callout on the game that earned the head narrator. */
+  justUnlockedHead?: boolean
   onPlayAgain: () => void
 }
 
-export function ResultsScreen({ summary, onPlayAgain }: ResultsScreenProps) {
+export function ResultsScreen({
+  summary,
+  justUnlockedHead = false,
+  onPlayAgain,
+}: ResultsScreenProps) {
   const { total, withinCount, averageError, accuracy, best, worst } = summary
   const animatedAccuracy = useCountUp(accuracy)
   return (
@@ -26,6 +32,13 @@ export function ResultsScreen({ summary, onPlayAgain }: ResultsScreenProps) {
           mood={accuracy >= 50 ? 'happy' : 'encouraging'}
         />
       </div>
+
+      {justUnlockedHead && (
+        <p className={styles.unlock} role="status">
+          <strong>New narrator unlocked.</strong> The floating head takes over from
+          here.
+        </p>
+      )}
 
       <div className={styles.grid}>
         <StatTile label="Images" value={total} />

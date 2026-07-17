@@ -3,6 +3,7 @@ import imagesData from '../data/images.json'
 import { gameReducer, initialState } from '../game/reducer'
 import { buildDeck, defaultRng, type RNG } from '../game/random'
 import { summarize } from '../game/scoring'
+import { isHeadUnlocked } from '../game/unlock'
 import type { ImageItem, RoundPlan } from '../game/types'
 import {
   createLocalSessionStore,
@@ -33,6 +34,7 @@ export function useGame(options: UseGameOptions = {}) {
 
   const [state, dispatch] = useReducer(gameReducer, initialState)
   const [history, setHistory] = useState<StoredSession[]>(() => store.getHistory())
+  const [justUnlockedHead, setJustUnlockedHead] = useState(false)
   const savedForGame = useRef(false)
 
   const summary = useMemo(() => summarize(state.results), [state.results])
@@ -42,6 +44,7 @@ export function useGame(options: UseGameOptions = {}) {
 
   const start = useCallback(() => {
     savedForGame.current = false
+    setJustUnlockedHead(false)
     dispatch({ type: 'START_GAME', deck: buildDeck(images, rng) })
   }, [rng])
 
@@ -53,15 +56,21 @@ export function useGame(options: UseGameOptions = {}) {
 
   const reset = useCallback(() => {
     savedForGame.current = false
+    setJustUnlockedHead(false)
     dispatch({ type: 'RESET' })
   }, [])
 
-  // Persist exactly once when a game reaches the results screen.
+  // Persist exactly once when a game reaches the results screen. The unlock is
+  // sampled either side of the save so the results screen can call out the
+  // moment it is earned, rather than on every later game that clears the bar.
   useEffect(() => {
     if (state.phase === 'results' && !savedForGame.current) {
       savedForGame.current = true
+      const unlockedBefore = isHeadUnlocked(store.getHistory())
       store.saveSession(summary)
-      setHistory(store.getHistory())
+      const next = store.getHistory()
+      setHistory(next)
+      setJustUnlockedHead(!unlockedBefore && isHeadUnlocked(next))
     }
   }, [state.phase, summary, store])
 
@@ -74,6 +83,10 @@ export function useGame(options: UseGameOptions = {}) {
     lastResult: state.lastResult,
     summary,
     history,
+    /** True once any saved game cleared the accuracy bar. */
+    headUnlocked: isHeadUnlocked(history),
+    /** True only on the results screen of the game that earned the unlock. */
+    justUnlockedHead,
     start,
     submit,
     next,
