@@ -10,6 +10,9 @@
   align-items: baseline;
   justify-content: center;
   gap: 0.1em;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .number {
@@ -34,7 +37,13 @@
   margin: 0;
   accent-color: var(--color-primary);
   cursor: pointer;
-  touch-action: pan-y;
+  /* The page never scrolls, so claim the gesture outright: "pan-y" left a brief
+     window where a touch could be read as a page-pan long-press, which some
+     mobile browsers resolve as a text-selection gesture instead of a drag. */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .slider::-webkit-slider-runnable-track {
